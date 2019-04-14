@@ -1,0 +1,116 @@
+# Allow specific users (line twelve below) rights to complete tasks
+# Requires a password, but not their own nor our most privileged user
+# Can also define more fine-tuned user aliases in `30_usergroups`
+
+# NEVER allow an unrestrained editor or file management tool as part 
+# of the config!  Ideally don't have them at all to avoid loopholes.
+# ALSO: better to clear any specification not used on a regular basis
+
+
+## User alias specification
+
+User_Alias	SYSTEMTASK = %dumb
+# These are your users who will be given access.  Better to explicity
+# define the users instead of populating a system group (some members
+# may have group manager rights, ready to exploit that fact).  Even
+# better (if assigning several people) to use the `30_usergroups` file.
+
+# Runas alias specification
+
+Runas_Alias	SUBSTITUTE = root
+# These are the users you intend to impersonate.  Given the current
+# setup, you will need to specify which in each command (sudo -u ...)
+
+## Cmnd alias specification
+
+Cmnd_Alias	EMERGSHUT = \
+		    /sbin/reboot, \
+		    /sbin/shutdown
+# System shutdown/reboot for emergency cases
+# Do not use on a firewall box; theoretically can expose your other PC's
+
+Cmnd_Alias	USRGPMGMT = \
+		    /usr/sbin/adduser, \
+		    /usr/sbin/addgroup, \
+		    /usr/sbin/deluser, \
+		    /usr/sbin/delgroup, \
+		    /usr/sbin/useradd, \
+		    /usr/sbin/userdel, \
+		    /usr/sbin/usermod, \
+		    /usr/sbin/groupadd, \
+		    /usr/sbin/groupdel, \
+		    /usr/sbin/groupmod
+# Some user and group management tools if you admin for many people
+# Attacker can add and (relatively) escalate their own accounts as well
+
+Cmnd_Alias	USERRESET = \
+		    /usr/local/bin/regpasswd
+# Changes passwords, locks/unlocks, et cetera for "regular" accounts
+# Shim for a risky (by itself) binary - mitigated, not necessarily safe
+
+Cmnd_Alias	DRIVEMGMT = \
+		    /bin/mount, \
+		    /bin/umount, \
+		    /usr/sbin/gparted
+# Basic tools (e.g. for a home user) to manage removable media
+# Threat for use in a remote attack appears to land on mischief-level
+
+Cmnd_Alias	STARTSTOP = \
+		    /usr/sbin/service, \
+		    /bin/journalctl, \
+		    /bin/kill, \
+		    /usr/bin/killall, \
+		    /bin/dmesg
+# Changes status of processes not belonging to user; read debugging
+# Better to limit the list (specify exact intent) if used at all, since
+# this can easily be used to expose more threats (incl with PAKAGMGMT).
+
+Cmnd_Alias	PAKAGMGMT = \
+		    /usr/bin/apt, \
+		    /usr/bin/dpkg, \
+		    sudoedit /etc/apt/sources.list
+# Some package management for Debian (based) systems
+# Not reasonable for most environments as attacker can package payload
+
+Cmnd_Alias	HTTPTOOLS = \
+		    /usr/sbin/a2query, \
+		    /usr/sbin/a2ensite, \
+		    /usr/sbin/a2enmod, \
+		    /usr/sbin/a2dissite
+# Tools for managing Apache2 (sample; edit to what works for you)
+# "Unwanted" modules and newly-redirected sites (for example) can be
+# a concern if Apache config directories are not properly secured.
+
+Cmnd_Alias	BINDTOOLS = \
+		    /usr/sbin/named-checkconf, \
+		    /usr/sbin/named-checkzone
+# Verify changes and general stability of your DNS.  Risk of attack
+# depends on your responsibililty of zone file security, for example.
+
+Cmnd_Alias	MAILTOOLS = \
+		    /usr/bin/mailq, \
+		    /usr/bin/newaliases
+# Basic tools for maintaining your mail transport agent. Also (in the
+# case of `newaliases`) assumes accessibility to `aliases` file.  If
+# they are compromised, you'll lose future sudo alerts.  Protect them.
+
+Cmnd_Alias	CONTAINER = \
+		    /usr/bin/lxc-start, \
+		    /usr/bin/lxc-stop, \
+		    /usr/bin/lxc-info, \
+		    /usr/bin/lxc-snapshot, \
+		    /usr/bin/lxc-monitor
+# Some stuff related to LXC.  Left out `lxc-attach` as by itself *will*
+# allow an attacker god access in any container, and the ability to get
+# back to bare metal.  If you need regular access, seek an alternative.
+
+
+## Modifications to behaviour
+
+Defaults!USERRESET	mail_always
+Defaults!HTTPTOOLS	mail_always
+Defaults!BINDTOOLS	mail_always
+Defaults!MAILTOOLS	mail_always
+Defaults!CONTAINER	mail_always
+# Be very paranoid about the use of these specifications by alerting
+# Also doubles as defining them without visudo complaining about them

@@ -1,0 +1,40 @@
+# Combine the relevant hosts, users and tasks into a plan that provides
+# balance (not needing to rely on `root` as often, but also not giving
+# the ability to perform every task via `sudo` - it's a balancing act).
+
+## All together now
+
+SYSTEMTASK      DESKTOP = (SUBSTITUTE) \
+                    USRGPMGMT, \
+                    USERRESET, \
+                    DRIVEMGMT, \
+                    STARTSTOP, \
+                    PAKAGMGMT
+# Give most anything for the chosen desktop user(s)
+
+SYSTEMTASK      THISLAN = (SUBSTITUTE) \
+                    EMERGSHUT
+# Allow power state options for any computer (with this policy) in LAN
+
+SYSADMINS	SERVERS = (SUBSTITUTE) \
+                    STARTSTOP, \
+                    PAKAGMGMT
+MAILADMINS	SERVERS = (SUBSTITUTE) \
+                    MAILTOOLS
+MANAGEUSER	SERVERS = (SUBSTITUTE) \
+                    USRGPMGMT, \
+                    USERRESET
+# Fine-tune the roles for the shared space
+
+#SYSTEMTASK	SERVERS = (SUBSTITUTE) \
+#                    STARTSTOP, \
+#                    PAKAGMGMT, \
+#                    USRGPMGMT, \
+#                    USERRESET
+# Or keep it simple if limited users and roles tend to overlap
+# If so, remove above comments and clean up the `30_usergroups` file
+
+
+SYSTEMTASK      VIRTUAL = (SUBSTITUTE) \
+                    PAKAGMGMT
+# Allow just package management for the containers

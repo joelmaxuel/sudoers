@@ -1,0 +1,29 @@
+# For deploying this policy across multiple (similar) environments
+# Refers to the identity of each instance, not the source of requests
+
+
+## Host alias specification
+
+Host_Alias	DESKTOP = \
+		    sharon-twr, \
+		    lois-notbk, \
+		    bram-notbk
+# Standalone towers and laptops that can benefit from some lax rules,
+# particularly if there are no established methods to connect remotely.
+
+Host_Alias	SERVERS = \
+		    192.168.0.81, \
+		    192.168.0.82
+# IP addresses to bare metal systems that need locked down access
+
+Host_Alias	VIRTUAL = \
+		    192.168.0.84, \
+		    192.168.0.85, \
+		    192.168.0.86, \
+		    192.168.0.87, \
+		    192.168.0.88
+# Containers that require minimal configuration
+
+Host_Alias	THISLAN = \
+		    192.168.0.0/24
+# Reflects any system with this config, and also within these subnets

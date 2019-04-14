@@ -1,0 +1,19 @@
+#
+# This file MUST be edited with the 'visudo' command as root
+#
+# Please add further content in /etc/sudoers.d/ instead of here
+#
+# See the man page for details on how to write a sudoers file
+#
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# User privilege specification
+root	ALL=(ALL:ALL) ALL
+# Keep that default option unless there is a reason not to.
+
+# See sudoers(5) for more information on "#include" directives:
+
+#includedir /etc/sudoers.d
+# Everything else will be added in there

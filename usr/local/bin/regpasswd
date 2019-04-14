@@ -1,0 +1,16 @@
+#!/bin/sh
+# A shim to only allow password management of regular users
+# (In this case, regular users are in/beyond the 1000 UID mark)
+
+MODUID=$(id -u $1)
+
+if [ -z "$MODUID" ] && [ -n "$1" ]; then
+    echo "Usage: $0 [USER] [OPTIONS]"
+    break 1
+
+else
+
+    if [ $MODUID -ge 1000 ]; then
+        passwd $2 $3 $4 $1
+    fi
+fi

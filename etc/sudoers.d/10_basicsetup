@@ -1,0 +1,37 @@
+# Set the stage for the rest of the config, but keep the cursing here
+# The file out-of-the-box presumes a fair bit of paranoia; roll with it
+# However as with most rest of the files in this repo, alter as needed
+
+
+# Annoy the bastards who make errors
+
+Defaults	insults
+
+
+# Be extra bitchy
+
+#Defaults	mail_badpass # Duplicate as defined in master
+#Defaults	mail_no_user # Duplicate as defined by default
+Defaults	mail_no_host
+Defaults	mail_no_perms
+# Question everything out of the ordinary.  In most cases, notify more
+# than one account of these breaches.  Such as, have in /etc/aliases:
+# root: sharon, lois, bram
+
+
+# Also limit their ability to fuck up unnoticed
+
+Defaults	passwd_tries=2
+
+# Require the password of some other asshole.
+# As in, don't make it easy for the logged in user to do shit nor 
+# allow someone meant to do shit the ability to do even more shit.
+
+Defaults	runaspw
+Defaults	runas_default = dumb
+
+# The above requires these respective entries in `passwd` and `group`
+# dumb:x:999:999::/home/dumb:/usr/sbin/nologin
+# dumb:x:999:sharon,lois,bram    # assuming sudo specs use this group
+# Set a good password for `dumb` with the `passwd` command.  Finally,
+# deny `dumb` the remote login (DenyUsers in `/etc/ssh/sshd_config`).

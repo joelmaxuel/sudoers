@@ -1,0 +1,26 @@
+# Allow specific users (of `sudo` group) to poweroff; reboot; suspend
+# Does not require a password
+
+
+## User alias specification
+
+User_Alias	LOCALPOWER = %sudo
+
+## Cmnd alias specification
+
+Cmnd_Alias	SHUTDOWN = \
+		    /sbin/poweroff, \
+		    /sbin/reboot, \
+                    /sbin/shutdown, \
+		    /bin/systemctl suspend
+# A few ways for the given user to change the power state
+
+## Modifications to behaviour
+
+Defaults!SHUTDOWN	!authenticate,!runaspw,runas_default=root
+# Don't require a password for these commands
+# Also override the pass-through account
+
+## All together now
+
+LOCALPOWER	DESKTOP = SHUTDOWN

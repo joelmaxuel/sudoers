@@ -1,0 +1,9 @@
+# For deploying this policy for the benefit of multiple users
+# Fine-tune who gets what based on the roles of individuals involved
+
+
+## User alias specification
+
+User_Alias	SYSADMINS = sharon
+User_Alias	MAILADMINS = bram, sharon
+User_Alias	MANAGEUSER = bram, lois
